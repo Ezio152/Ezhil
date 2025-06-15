@@ -34,8 +34,5 @@ def set_memory(key, value):
 def add_to_memory(key, value):
     return set_memory(key, value)
 
-def add_to_memory(key, value):
-    return set_memory(key, value)
-
 def get_all_memory():
     return memory_store
