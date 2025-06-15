@@ -2,24 +2,25 @@ from utils.memory import add_to_memory
 from utils.calendar import add_event
 from datetime import datetime
 
-def decide_action(input_dict):
-    message = input_dict.get("message", "")
-    if "remember" in message.lower():
-        return "memory"
-    elif "schedule" in message.lower() or "meeting" in message.lower():
-        return "calendar"
+def decide_action(state: dict) -> dict:
+    message = state.get("message", "").lower()
+    if "remember" in message:
+        next_node = "memory"
+    elif "schedule" in message or "meeting" in message:
+        next_node = "calendar"
     else:
-        return "respond"
+        next_node = "respond"
+    return {"next": next_node}
 
-def handle_memory(input_dict):
-    message = input_dict.get("message", "")
+def handle_memory(state: dict) -> dict:
+    message = state.get("message", "")
     add_to_memory(f"user_input_{datetime.now().isoformat()}", message)
     return {"response": "Noted and saved to memory."}
 
-def handle_calendar(input_dict):
-    message = input_dict.get("message", "")
+def handle_calendar(state: dict) -> dict:
+    message = state.get("message", "")
     add_event(f"Event from message: {message}", "unknown")
     return {"response": "Event saved to your calendar."}
 
-def handle_fallback(input_dict):
+def handle_respond(state: dict) -> dict:
     return {"response": "Got it. How can I help you further?"}
